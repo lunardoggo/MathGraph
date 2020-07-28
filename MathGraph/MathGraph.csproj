@@ -94,5 +94,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MathGraph.Maths\MathGraph.Maths.csproj">
+      <Project>{e19599fe-5411-4015-80b1-e43d5e69d835}</Project>
+      <Name>MathGraph.Maths</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
