@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathGraph.Maths.Errors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,16 @@ namespace MathGraph
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
         }
+
+        public IEnumerable<ErrorSinkEntry> ErrorSink
+        {
+            get { return (IEnumerable<ErrorSinkEntry>)GetValue(ErrorSinkProperty); }
+            set { SetValue(ErrorSinkProperty, value); }
+        }
+
+        public static readonly DependencyProperty ErrorSinkProperty =
+            DependencyProperty.Register("ErrorSink", typeof(IEnumerable<ErrorSinkEntry>), typeof(MainWindow), new UIPropertyMetadata(null));
     }
 }

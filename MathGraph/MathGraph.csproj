@@ -55,6 +55,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\CalculatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ErrorSinkView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,6 +71,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\AddTokenCommand.cs" />
+    <Compile Include="Commands\ClearExpressionCommand.cs" />
+    <Compile Include="Commands\MathsExpressionContainerCommand.cs" />
+    <Compile Include="Commands\RemoveLastTokenCommand.cs" />
+    <Compile Include="Commands\SolveExpressionCommand.cs" />
+    <Compile Include="Controls\CalculatorView.xaml.cs">
+      <DependentUpon>CalculatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ErrorSinkView.xaml.cs">
+      <DependentUpon>ErrorSinkView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IMathsExpressionContainer.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

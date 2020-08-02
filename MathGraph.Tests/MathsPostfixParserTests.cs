@@ -12,23 +12,19 @@ namespace MathGraph.Tests
         [Fact]
         public void TestParseSimpleCalculation()
         {
-            MathsToken[] tokens = this.GetSimpleCalculationTokens();
-
-            Queue<MathsToken> postfix = new MathsPostfixParser().ParseTokens(tokens);
-            MathsToken[] expected = this.GetSimpleCalculationInPostfixNotation();
-
-            this.AssertSameContent(expected, postfix);
+            this.AssertOutcome(this.GetSimpleCalculationInPostfixNotation(), this.GetSimpleCalculationTokens());
         }
 
         [Fact]
-        public void TestParseCalculationWIthUnary()
+        public void TestParseCalculationWithUnary()
         {
-            MathsToken[] tokens = this.GetCalculationWithUnary();
+            this.AssertOutcome(this.GetCalculationWithUnaryInPostfixNotation(), this.GetCalculationWithUnary());
+        }
 
-            Queue<MathsToken> postfix = new MathsPostfixParser().ParseTokens(tokens);
-            MathsToken[] expected = this.GetCalculationWithUnaryInPostfixNotation();
-
-            this.AssertSameContent(expected, postfix);
+        [Fact]
+        public void TestParseCalculationWithPrecedenceAndUnary()
+        {
+            this.AssertOutcome(this.GetCalculationWithPrecedenceAndUnaryInPostfixNotation(), this.GetCalculationWithPrecedenceAndUnary());
         }
 
         [Fact]
@@ -49,6 +45,12 @@ namespace MathGraph.Tests
         private void AssertWarning(ErrorSink errorSink, Severety severety, string message)
         {
             Assert.Contains(errorSink.Entries, _entry => _entry.Severety == severety && _entry.Message.Equals(message));
+        }
+
+        private void AssertOutcome(MathsToken[] expectedResult, MathsToken[] input)
+        {
+            Queue<MathsToken> postfix = new MathsPostfixParser().ParseTokens(input);
+            this.AssertSameContent(expectedResult, postfix);
         }
 
         private void AssertSameContent(MathsToken[] expected, Queue<MathsToken> actual)
@@ -152,6 +154,37 @@ namespace MathGraph.Tests
                 new MathsToken("1", new TokenSpan(3, 1), MathsTokenCategory.Number, MathsTokenType.Number),
                 new MathsToken("+", new TokenSpan(2, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
                 new MathsToken("-", new TokenSpan(4, 1), MathsTokenCategory.Symbol, MathsTokenType.Minus)
+            };
+        }
+
+        private MathsToken[] GetCalculationWithPrecedenceAndUnary()
+        {
+            //same as: -7 / 14 + 3 - 0.5
+            return new MathsToken[]
+            {
+                new MathsToken("-", new TokenSpan(0, 1), MathsTokenCategory.Unary, MathsTokenType.UnaryMinus),
+                new MathsToken("7", new TokenSpan(1, 1), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("/", new TokenSpan(2, 1), MathsTokenCategory.Symbol, MathsTokenType.Divide),
+                new MathsToken("14", new TokenSpan(3, 2), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("+", new TokenSpan(4, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
+                new MathsToken("3", new TokenSpan(5, 1), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("-", new TokenSpan(6, 1), MathsTokenCategory.Symbol, MathsTokenType.Minus),
+                new MathsToken("0.5", new TokenSpan(7, 3), MathsTokenCategory.Number, MathsTokenType.Number)
+            };
+        }
+
+        private MathsToken[] GetCalculationWithPrecedenceAndUnaryInPostfixNotation()
+        {
+            //result: -7 14 / 3 + 0.5 -
+            return new MathsToken[]
+            {
+                new MathsToken("-7", new TokenSpan(0, 2), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("14", new TokenSpan(3, 2), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("/", new TokenSpan(2, 1), MathsTokenCategory.Symbol, MathsTokenType.Divide),
+                new MathsToken("3", new TokenSpan(5, 1), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("+", new TokenSpan(4, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
+                new MathsToken("0.5", new TokenSpan(7, 3), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("-", new TokenSpan(6, 1), MathsTokenCategory.Symbol, MathsTokenType.Minus)
             };
         }
     }

@@ -22,6 +22,7 @@ namespace MathGraph.Maths.Parser
                 if (current.Category == MathsTokenCategory.Number || current.Category == MathsTokenCategory.Variable)
                 {
                     output.Enqueue(this.GetMathsTokenWithSign(current, lastWasUnary, negateOngoingLevel));
+                    lastWasUnary = negateOngoingLevel > 0;
                 }
                 else if(current.Category == MathsTokenCategory.Unary)
                 {
@@ -105,7 +106,7 @@ namespace MathGraph.Maths.Parser
         {
             TokenSpan tokenSpan = token.TokenSpan;
             string value = token.Value;
-            if(lastWasUnary ^ negateOngoingLevel > 0)
+            if(lastWasUnary || negateOngoingLevel > 0)
             {
                 tokenSpan = new TokenSpan(token.TokenSpan.StartIndex - 1, token.TokenSpan.Length + 1);
                 value = "-" + token.Value;

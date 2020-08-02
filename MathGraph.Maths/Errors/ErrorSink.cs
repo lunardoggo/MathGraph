@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace MathGraph.Maths.Errors
 {
@@ -19,7 +18,7 @@ namespace MathGraph.Maths.Errors
 
         public IEnumerable<ErrorSinkEntry> Entries
         {
-            get { return this.entries.ToImmutableArray(); }
+            get { return this.entries.ToArray(); }
         }
 
         public void Clear()
