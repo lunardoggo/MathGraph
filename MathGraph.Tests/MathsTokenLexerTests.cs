@@ -16,10 +16,10 @@ namespace MathGraph.Tests
             Assert.Equal(7, tokens.Length);
 
             this.AssertToken("10", MathsTokenCategory.Number, MathsTokenType.Number, tokens[0]);
-            this.AssertToken("+", MathsTokenCategory.Operator, MathsTokenType.Plus, tokens[1]);
+            this.AssertToken("+", MathsTokenCategory.Symbol, MathsTokenType.Plus, tokens[1]);
             this.AssertToken("(", MathsTokenCategory.Parenthesis, MathsTokenType.OpenParenthesis, tokens[2]);
             this.AssertToken("3", MathsTokenCategory.Number, MathsTokenType.Number, tokens[3]);
-            this.AssertToken("-", MathsTokenCategory.Operator, MathsTokenType.Minus, tokens[4]);
+            this.AssertToken("-", MathsTokenCategory.Symbol, MathsTokenType.Minus, tokens[4]);
             this.AssertToken("6", MathsTokenCategory.Number, MathsTokenType.Number, tokens[5]);
             this.AssertToken(")", MathsTokenCategory.Parenthesis, MathsTokenType.ClosingParenthesis, tokens[6]);
         }
@@ -33,9 +33,9 @@ namespace MathGraph.Tests
             Assert.Equal(5, tokens.Length);
 
             this.AssertToken("4.5", MathsTokenCategory.Number, MathsTokenType.Number, tokens[0]);
-            this.AssertToken("/", MathsTokenCategory.Operator, MathsTokenType.Divide, tokens[1]);
+            this.AssertToken("/", MathsTokenCategory.Symbol, MathsTokenType.Divide, tokens[1]);
             this.AssertToken("0.5", MathsTokenCategory.Number, MathsTokenType.Number, tokens[2]);
-            this.AssertToken("+", MathsTokenCategory.Operator, MathsTokenType.Plus, tokens[3]);
+            this.AssertToken("+", MathsTokenCategory.Symbol, MathsTokenType.Plus, tokens[3]);
             this.AssertToken("2", MathsTokenCategory.Number, MathsTokenType.Number, tokens[4]);
         }
 
@@ -55,7 +55,7 @@ namespace MathGraph.Tests
         }
 
         [Fact]
-        private void TestLexExpressionWithVariable()
+        public void TestLexExpressionWithVariable()
         {
             string expression = "2 * x1 + 4.5";
 
@@ -64,10 +64,31 @@ namespace MathGraph.Tests
             Assert.Equal(5, tokens.Length);
 
             this.AssertToken("2", MathsTokenCategory.Number, MathsTokenType.Number, tokens[0]);
-            this.AssertToken("*", MathsTokenCategory.Operator, MathsTokenType.Multiply, tokens[1]);
+            this.AssertToken("*", MathsTokenCategory.Symbol, MathsTokenType.Multiply, tokens[1]);
             this.AssertToken("x1", MathsTokenCategory.Variable, MathsTokenType.Variable, tokens[2]);
-            this.AssertToken("+", MathsTokenCategory.Operator, MathsTokenType.Plus, tokens[3]);
+            this.AssertToken("+", MathsTokenCategory.Symbol, MathsTokenType.Plus, tokens[3]);
             this.AssertToken("4.5", MathsTokenCategory.Number, MathsTokenType.Number, tokens[4]);
+        }
+
+        [Fact]
+        public void TestLexExpressionWithUnaryOperators()
+        {
+            string expression = "- 3 + (- 1) - - 5";
+
+            MathsToken[] tokens = this.GetExpressionTokens(expression);
+
+            Assert.Equal(10, tokens.Length);
+
+            this.AssertToken("-", MathsTokenCategory.Unary, MathsTokenType.UnaryMinus, tokens[0]);
+            this.AssertToken("3", MathsTokenCategory.Number, MathsTokenType.Number, tokens[1]);
+            this.AssertToken("+", MathsTokenCategory.Symbol, MathsTokenType.Plus, tokens[2]);
+            this.AssertToken("(", MathsTokenCategory.Parenthesis, MathsTokenType.OpenParenthesis, tokens[3]);
+            this.AssertToken("-", MathsTokenCategory.Unary, MathsTokenType.UnaryMinus, tokens[4]);
+            this.AssertToken("1", MathsTokenCategory.Number, MathsTokenType.Number, tokens[5]);
+            this.AssertToken(")", MathsTokenCategory.Parenthesis, MathsTokenType.ClosingParenthesis, tokens[6]);
+            this.AssertToken("-", MathsTokenCategory.Symbol, MathsTokenType.Minus, tokens[7]);
+            this.AssertToken("-", MathsTokenCategory.Unary, MathsTokenType.UnaryMinus, tokens[8]);
+            this.AssertToken("5", MathsTokenCategory.Number, MathsTokenType.Number, tokens[9]);
         }
 
         private MathsToken[] GetExpressionTokens(string expression)

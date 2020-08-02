@@ -1,10 +1,14 @@
-﻿namespace MathGraph.Maths.Lexer
+﻿using System.Diagnostics;
+using System;
+
+namespace MathGraph.Maths.Lexer
 {
-    public class MathsToken
+    [DebuggerDisplay("\\{ Type = {Type}, Value = \"{Value}\" \\}")]
+    public class MathsToken : IEquatable<MathsToken>
     {
-        public MathsToken(string value, LineSpan lineSpan, MathsTokenCategory category, MathsTokenType type)
+        public MathsToken(string value, TokenSpan tokenSpan, MathsTokenCategory category, MathsTokenType type)
         {
-            this.LineSpan = lineSpan;
+            this.TokenSpan = tokenSpan;
             this.Category = category;
             this.Value = value;
             this.Type = type;
@@ -12,8 +16,17 @@
 
         public MathsTokenCategory Category { get; }
         public MathsTokenType Type { get; }
-        public LineSpan LineSpan { get; }
+        public TokenSpan TokenSpan { get; }
         public string Value { get; }
+
+        public bool Equals(MathsToken other)
+        {
+            return other != null
+                && (this.TokenSpan == null && other.TokenSpan == null || this.TokenSpan.Equals(other.TokenSpan))
+                && this.Category == other.Category
+                && this.Value == other.Value
+                && this.Type == other.Type;
+        }
     }
 
     public enum MathsTokenCategory
@@ -21,9 +34,10 @@
         Undefined,
 
         Parenthesis,
-        Operator,
+        Symbol,
         Variable,
         Number,
+        Unary
     }
 
     public enum MathsTokenType
@@ -31,7 +45,7 @@
         Undefined,
 
         Number,
-        
+
         Multiply,
         Divide,
         Minus,
@@ -40,6 +54,8 @@
         ClosingParenthesis,
         OpenParenthesis,
 
-        Variable
+        Variable,
+
+        UnaryMinus
     }
 }

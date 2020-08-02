@@ -18,17 +18,19 @@ namespace MathGraph.Maths.Lexer
             List<MathsToken> tokens = new List<MathsToken>();
             int currentIndex = 0;
 
+            MathsToken previousToken = null;
             while (currentIndex < expression.Length)
             {
-                MathsToken token = this.GetNextToken(expression, currentIndex);
+                MathsToken token = this.GetNextToken(expression, currentIndex, previousToken);
                 tokens.Add(token);
 
-                currentIndex += token.LineSpan.Length;
+                currentIndex += token.TokenSpan.Length;
+                previousToken = token;
             }
             return tokens.ToArray();
         }
 
-        private MathsToken GetNextToken(string expression, int currentIndex)
+        private MathsToken GetNextToken(string expression, int currentIndex, MathsToken previousToken)
         {
             char currentChar = expression[currentIndex];
             MathsTokenCategory category = this.GetCharTokenCategory(currentChar);
@@ -36,15 +38,14 @@ namespace MathGraph.Maths.Lexer
             {
                 return this.GetNumberMathsToken(expression, currentIndex);
             }
-            else if (category == MathsTokenCategory.Operator)
+            else if (category == MathsTokenCategory.Symbol)
             {
-                MathsTokenType operatorType = this.GetOperatorTokenType(currentChar);
-                return new MathsToken(currentChar.ToString(), new LineSpan(currentIndex, 1), MathsTokenCategory.Operator, operatorType);
+                return this.GetSymbolOrUnaryToken(currentChar, currentIndex, previousToken);
             }
             else if (category == MathsTokenCategory.Parenthesis)
             {
                 MathsTokenType parenthesisType = this.GetParenthesisTokenType(currentChar);
-                return new MathsToken(currentChar.ToString(), new LineSpan(currentIndex, 1), MathsTokenCategory.Parenthesis, parenthesisType);
+                return new MathsToken(currentChar.ToString(), new TokenSpan(currentIndex, 1), MathsTokenCategory.Parenthesis, parenthesisType);
             }
             else if(category == MathsTokenCategory.Variable)
             {
@@ -54,6 +55,19 @@ namespace MathGraph.Maths.Lexer
             {
                 throw new NotImplementedException();
             }
+        }
+
+        private MathsToken GetSymbolOrUnaryToken(char currentChar, int currentIndex, MathsToken previousToken)
+        {
+            MathsTokenType operatorType = this.GetOperatorTokenType(currentChar);
+            MathsTokenCategory category = MathsTokenCategory.Symbol;
+            if(operatorType == MathsTokenType.Minus
+               && (previousToken == null || previousToken.Category == MathsTokenCategory.Symbol || previousToken.Type == MathsTokenType.OpenParenthesis))
+            {
+                operatorType = MathsTokenType.UnaryMinus;
+                category = MathsTokenCategory.Unary;
+            }
+            return new MathsToken(currentChar.ToString(), new TokenSpan(currentIndex, 1), category, operatorType);
         }
 
         private MathsTokenCategory GetCharTokenCategory(char @char)
@@ -67,7 +81,7 @@ namespace MathGraph.Maths.Lexer
             }
             else if (operators.Contains(@char))
             {
-                return MathsTokenCategory.Operator;
+                return MathsTokenCategory.Symbol;
             }
             else if (parentheses.Contains(@char))
             {
@@ -130,7 +144,7 @@ namespace MathGraph.Maths.Lexer
                 value = this.GetValueWithoutLastDecimalPoints(value);
             }
 
-            return new MathsToken(value, new LineSpan(currentIndex, builder.Length), MathsTokenCategory.Number, MathsTokenType.Number);
+            return new MathsToken(value, new TokenSpan(currentIndex, builder.Length), MathsTokenCategory.Number, MathsTokenType.Number);
         }
 
         private void AddDecimalPointErrors(string value)
@@ -162,7 +176,7 @@ namespace MathGraph.Maths.Lexer
                 index++;
             }
 
-            return new MathsToken(builder.ToString(), new LineSpan(currentIndex, builder.Length), MathsTokenCategory.Variable, MathsTokenType.Variable);
+            return new MathsToken(builder.ToString(), new TokenSpan(currentIndex, builder.Length), MathsTokenCategory.Variable, MathsTokenType.Variable);
         }
     }
 }
