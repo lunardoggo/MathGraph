@@ -5,6 +5,7 @@ using MathGraph.Interfaces;
 using System.Linq;
 using System;
 using MathGraph.Maths.Parser.PostfixNotation;
+using MathGraph.Maths.Calculator;
 
 namespace MathGraph.Commands
 {
@@ -21,9 +22,12 @@ namespace MathGraph.Commands
             MathsPostfixParser parser = new MathsPostfixParser();
             IEnumerable<PostfixNotationElement> postfix = parser.ParseTokens(tokens);
 
-            this.container.ErrorSinkEntries = lexer.ErrorSink.Entries.Concat(parser.ErrorSink.Entries);
-            //base.container.PostfixNotation = String.Join(" ", postfix.Select(_token => _token.Value));
-            //TODO: calculate result
+            PostfixCalculator calculator = new PostfixCalculator();
+            double result = calculator.Calculate(postfix);
+
+            this.container.ErrorSinkEntries = lexer.ErrorSink.Entries.Concat(parser.ErrorSink.Entries).Concat(calculator.ErrorSink.Entries);
+            base.container.PostfixNotation = String.Join(" ", postfix.Select(_element => _element.StringValue));
+            base.container.Result = result;
         }
     }
 }

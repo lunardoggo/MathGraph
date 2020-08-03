@@ -11,6 +11,8 @@
         public bool IsNegative { get; }
         public string Name { get; }
 
+        public override string StringValue { get { return $"{(this.IsNegative ? "-" : "")}{this.Name}"; } }
+
         public override bool Equals(PostfixNotationElement other)
         {
             return other is VariableElement variable
