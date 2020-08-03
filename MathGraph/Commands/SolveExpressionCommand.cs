@@ -4,6 +4,7 @@ using MathGraph.Maths.Lexer;
 using MathGraph.Interfaces;
 using System.Linq;
 using System;
+using MathGraph.Maths.Parser.PostfixNotation;
 
 namespace MathGraph.Commands
 {
@@ -18,10 +19,10 @@ namespace MathGraph.Commands
             IEnumerable<MathsToken> tokens = lexer.LexMathematicalExpression(base.container.Expression);
 
             MathsPostfixParser parser = new MathsPostfixParser();
-            IEnumerable<MathsToken> postfix = parser.ParseTokens(tokens);
+            IEnumerable<PostfixNotationElement> postfix = parser.ParseTokens(tokens);
 
             this.container.ErrorSinkEntries = lexer.ErrorSink.Entries.Concat(parser.ErrorSink.Entries);
-            base.container.PostfixNotation = String.Join(" ", postfix.Select(_token => _token.Value));
+            //base.container.PostfixNotation = String.Join(" ", postfix.Select(_token => _token.Value));
             //TODO: calculate result
         }
     }

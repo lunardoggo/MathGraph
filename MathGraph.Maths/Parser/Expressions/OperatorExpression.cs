@@ -28,9 +28,10 @@
 
     public enum OperationType
     {
-        Multiplication,
-        Division,
-        Addition,
-        Subtraction
+        //Indices match those of MathsTokenType
+        Multiplication = 2,
+        Subtraction = 4,
+        Division = 3,
+        Addition = 5,
     }
 }

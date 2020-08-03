@@ -46,10 +46,10 @@ namespace MathGraph.Maths.Lexer
 
         Number,
 
-        Multiply,
-        Divide,
-        Minus,
-        Plus,
+        Multiply = 2,
+        Divide = 3,
+        Minus = 4,
+        Plus = 5,
 
         ClosingParenthesis,
         OpenParenthesis,

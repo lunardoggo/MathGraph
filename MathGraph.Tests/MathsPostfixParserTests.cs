@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using MathGraph.Maths.Parser.PostfixNotation;
 using MathGraph.Maths.Parser;
 using MathGraph.Maths.Errors;
 using MathGraph.Maths.Lexer;
@@ -33,8 +33,8 @@ namespace MathGraph.Tests
             MathsToken[] tokens = this.GetWarningTokens();
 
             MathsPostfixParser parser = new MathsPostfixParser();
-            Queue<MathsToken> postfix = parser.ParseTokens(tokens);
-            MathsToken[] expected = this.GetWarningPostfixNotation();
+            PostfixNotationElement[] postfix = parser.ParseTokens(tokens).ToArray();
+            PostfixNotationElement[] expected = this.GetWarningPostfixNotation();
 
             this.AssertSameContent(expected, postfix);
 
@@ -47,18 +47,18 @@ namespace MathGraph.Tests
             Assert.Contains(errorSink.Entries, _entry => _entry.Severety == severety && _entry.Message.Equals(message));
         }
 
-        private void AssertOutcome(MathsToken[] expectedResult, MathsToken[] input)
+        private void AssertOutcome(PostfixNotationElement[] expectedResult, MathsToken[] input)
         {
-            Queue<MathsToken> postfix = new MathsPostfixParser().ParseTokens(input);
+            PostfixNotationElement[] postfix = new MathsPostfixParser().ParseTokens(input).ToArray();
             this.AssertSameContent(expectedResult, postfix);
         }
 
-        private void AssertSameContent(MathsToken[] expected, Queue<MathsToken> actual)
+        private void AssertSameContent(PostfixNotationElement[] expected, PostfixNotationElement[] actual)
         {
-            Assert.Equal(expected.Length, actual.Count);
+            Assert.Equal(expected.Length, actual.Length);
             for (int i = 0; i < expected.Length; i++)
             {
-                Assert.Equal(expected[i], actual.Dequeue());
+                Assert.Equal(expected[i], actual[i]);
             }
         }
 
@@ -77,18 +77,18 @@ namespace MathGraph.Tests
             };
         }
 
-        private MathsToken[] GetSimpleCalculationInPostfixNotation()
+        private PostfixNotationElement[] GetSimpleCalculationInPostfixNotation()
         {
             //result: 4 2.5 4 * + 5 -
-            return new MathsToken[]
+            return new PostfixNotationElement[]
             {
-                new MathsToken("4", new TokenSpan(0, 1), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("2.5", new TokenSpan(2, 3), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("4", new TokenSpan(6, 1), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("*", new TokenSpan(5, 1), MathsTokenCategory.Symbol, MathsTokenType.Multiply),
-                new MathsToken("+", new TokenSpan(1, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
-                new MathsToken("5", new TokenSpan(8, 1), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("-", new TokenSpan(7, 1), MathsTokenCategory.Symbol, MathsTokenType.Minus)
+                new ValueElement(4.0d),
+                new ValueElement(2.5d),
+                new ValueElement(4.0d),
+                new OperatorElement(MathsTokenType.Multiply),
+                new OperatorElement(MathsTokenType.Plus),
+                new ValueElement(5.0d),
+                new OperatorElement(MathsTokenType.Minus)
             };
         }
 
@@ -104,7 +104,7 @@ namespace MathGraph.Tests
                 new MathsToken("(", new TokenSpan(4, 1), MathsTokenCategory.Parenthesis, MathsTokenType.OpenParenthesis),
                 new MathsToken("2", new TokenSpan(5, 1), MathsTokenCategory.Number, MathsTokenType.Number),
                 new MathsToken("+", new TokenSpan(6, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
-                new MathsToken("x", new TokenSpan(7, 1), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("x", new TokenSpan(7, 1), MathsTokenCategory.Variable, MathsTokenType.Variable),
                 new MathsToken(")", new TokenSpan(8, 1), MathsTokenCategory.Parenthesis, MathsTokenType.ClosingParenthesis),
                 new MathsToken(")", new TokenSpan(9, 1), MathsTokenCategory.Parenthesis, MathsTokenType.ClosingParenthesis),
                 new MathsToken("+", new TokenSpan(10, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
@@ -115,18 +115,18 @@ namespace MathGraph.Tests
             };
         }
 
-        private MathsToken[] GetCalculationWithUnaryInPostfixNotation()
+        private PostfixNotationElement[] GetCalculationWithUnaryInPostfixNotation()
         {
             //result: 4 -2 -x + * -1 +
-            return new MathsToken[]
+            return new PostfixNotationElement[]
             {
-                new MathsToken("4", new TokenSpan(0, 1), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("-2", new TokenSpan(4, 2), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("-x", new TokenSpan(6, 2), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("+", new TokenSpan(6, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
-                new MathsToken("*", new TokenSpan(1, 1), MathsTokenCategory.Symbol, MathsTokenType.Multiply),
-                new MathsToken("-1", new TokenSpan(12, 2), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("+", new TokenSpan(10, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus)
+                new ValueElement(4.0d),
+                new ValueElement(-2.0d),
+                new VariableElement(true, "x"),
+                new OperatorElement(MathsTokenType.Plus),
+                new OperatorElement(MathsTokenType.Multiply),
+                new ValueElement(-1.0d),
+                new OperatorElement(MathsTokenType.Plus)
             };
         }
 
@@ -144,16 +144,16 @@ namespace MathGraph.Tests
             };
         }
 
-        private MathsToken[] GetWarningPostfixNotation()
+        private PostfixNotationElement[] GetWarningPostfixNotation()
         {
             //2 1 + -
             //Eventhough the minus is before the closing parenthesis, add it to the output
-            return new MathsToken[]
+            return new PostfixNotationElement[]
             {
-                new MathsToken("2", new TokenSpan(1, 1), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("1", new TokenSpan(3, 1), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("+", new TokenSpan(2, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
-                new MathsToken("-", new TokenSpan(4, 1), MathsTokenCategory.Symbol, MathsTokenType.Minus)
+                new ValueElement(2.0d),
+                new ValueElement(1.0d),
+                new OperatorElement(MathsTokenType.Plus),
+                new OperatorElement(MathsTokenType.Minus)
             };
         }
 
@@ -173,18 +173,18 @@ namespace MathGraph.Tests
             };
         }
 
-        private MathsToken[] GetCalculationWithPrecedenceAndUnaryInPostfixNotation()
+        private PostfixNotationElement[] GetCalculationWithPrecedenceAndUnaryInPostfixNotation()
         {
             //result: -7 14 / 3 + 0.5 -
-            return new MathsToken[]
+            return new PostfixNotationElement[]
             {
-                new MathsToken("-7", new TokenSpan(0, 2), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("14", new TokenSpan(3, 2), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("/", new TokenSpan(2, 1), MathsTokenCategory.Symbol, MathsTokenType.Divide),
-                new MathsToken("3", new TokenSpan(5, 1), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("+", new TokenSpan(4, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
-                new MathsToken("0.5", new TokenSpan(7, 3), MathsTokenCategory.Number, MathsTokenType.Number),
-                new MathsToken("-", new TokenSpan(6, 1), MathsTokenCategory.Symbol, MathsTokenType.Minus)
+                new ValueElement(-7.0d),
+                new ValueElement(14.0d),
+                new OperatorElement(MathsTokenType.Divide),
+                new ValueElement(3.0d),
+                new OperatorElement(MathsTokenType.Plus),
+                new ValueElement(0.5d),
+                new OperatorElement(MathsTokenType.Minus)
             };
         }
     }

@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using MathGraph.Maths.Parser.PostfixNotation;
+using System.Collections.Generic;
 using MathGraph.Maths.Errors;
 using MathGraph.Maths.Lexer;
+using System.Linq;
 using System;
 
 namespace MathGraph.Maths.Parser
 {
     public class MathsPostfixParser
     {
-        public Queue<MathsToken> ParseTokens(IEnumerable<MathsToken> tokens)
+        public IEnumerable<PostfixNotationElement> ParseTokens(IEnumerable<MathsToken> tokens)
         {
             IEnumerator<MathsToken> enumerator = tokens.GetEnumerator();
             Stack<MathsToken> operators = new Stack<MathsToken>();
@@ -75,7 +77,7 @@ namespace MathGraph.Maths.Parser
             {
                 output.Enqueue(operators.Pop());
             }
-            return output;
+            return output.Select(_token => PostfixNotationElementFactory.Instance.Produce(_token));
         }
 
         private bool ComparedOperatorHasGreaterOrSamePrecedence(MathsToken current, MathsToken comparedToken)
