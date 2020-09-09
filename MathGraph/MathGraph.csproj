@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Utility\OperatorUtility.cs" />
     <Page Include="Controls\CalculatorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -79,6 +80,7 @@
     <Compile Include="Controls\CalculatorView.xaml.cs">
       <DependentUpon>CalculatorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CartesianCoordinateSystem.cs" />
     <Compile Include="Controls\ErrorSinkView.xaml.cs">
       <DependentUpon>ErrorSinkView.xaml</DependentUpon>
     </Compile>

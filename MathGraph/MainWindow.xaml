@@ -6,15 +6,22 @@
         xmlns:ctrl="clr-namespace:MathGraph.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" MinHeight="300" MinWidth="400">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition MinHeight="200" Height="*"/>
-            <RowDefinition Height="4"/>
-            <RowDefinition MinHeight="50" Height="100"/>
-        </Grid.RowDefinitions>
+    <TabControl>
+        <TabItem Header="Calculator">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition MinHeight="200" Height="*"/>
+                    <RowDefinition Height="4"/>
+                    <RowDefinition MinHeight="50" Height="100"/>
+                </Grid.RowDefinitions>
 
-        <ctrl:CalculatorView Grid.Row="0" x:Name="calculator" ErrorSinkEntries="{Binding Path=ErrorSink, Mode=OneWayToSource}"/>
-        <GridSplitter Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="LightGray"/>
-        <ctrl:ErrorSinkView Grid.Row="2" ItemsSource="{Binding Path=ErrorSink, Mode=OneWay}"/>
-    </Grid>
+                <ctrl:CalculatorView Grid.Row="0" x:Name="calculator" ErrorSinkEntries="{Binding Path=ErrorSink, Mode=OneWayToSource}"/>
+                <GridSplitter Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="LightGray"/>
+                <ctrl:ErrorSinkView Grid.Row="2" ItemsSource="{Binding Path=ErrorSink, Mode=OneWay}"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Graph" IsSelected="True">
+            <ctrl:CartesianCoordinateSystem/>
+        </TabItem>
+    </TabControl>
 </Window>
