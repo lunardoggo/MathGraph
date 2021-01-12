@@ -80,7 +80,6 @@
     <Compile Include="Controls\CalculatorView.xaml.cs">
       <DependentUpon>CalculatorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CartesianCoordinateSystem.cs" />
     <Compile Include="Controls\ErrorSinkView.xaml.cs">
       <DependentUpon>ErrorSinkView.xaml</DependentUpon>
     </Compile>

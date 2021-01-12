@@ -8,6 +8,7 @@
             this.IsNegative = isNegative;
         }
 
+        public override int MaxChildrenCount { get; } = 0;
         public string VariableName { get; }
         public bool IsNegative { get; }
 

@@ -7,6 +7,7 @@
             this.Value = value;
         }
 
+        public override int MaxChildrenCount { get; } = 0;
         public double Value { get; }
 
         protected override bool Equals(MathsExpression expression)

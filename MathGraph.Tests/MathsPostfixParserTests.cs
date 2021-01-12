@@ -33,13 +33,37 @@ namespace MathGraph.Tests
             MathsToken[] tokens = this.GetWarningTokens();
 
             MathsPostfixParser parser = new MathsPostfixParser();
-            PostfixNotationElement[] postfix = parser.ParseTokens(tokens).ToArray();
+            PostfixNotationElement[] postfix = parser.Parse(tokens).ToArray();
             PostfixNotationElement[] expected = this.GetWarningPostfixNotation();
 
             this.AssertSameContent(expected, postfix);
 
             Assert.Single(parser.ErrorSink.Entries);
             this.AssertWarning(parser.ErrorSink, Severety.Error, "Unexpected \"-\" before closing parenthesis");
+        }
+
+        [Fact]
+        public void TestParseOrderOfOperations()
+        {
+            MathsToken[] tokens = new MathsToken[]
+            {
+                new MathsToken("5", new TokenSpan(0, 1), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("+", new TokenSpan(1, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
+                new MathsToken("10", new TokenSpan(2, 2), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("/", new TokenSpan(4, 1), MathsTokenCategory.Symbol, MathsTokenType.Divide),
+                new MathsToken("2", new TokenSpan(5, 1), MathsTokenCategory.Number, MathsTokenType.Number),
+            };
+
+            PostfixNotationElement[] elements = new PostfixNotationElement[]
+            {
+                new ValueElement(5),
+                new ValueElement(10),
+                new ValueElement(2),
+                new OperatorElement(MathsTokenType.Divide),
+                new OperatorElement(MathsTokenType.Plus)
+            };
+
+            this.AssertOutcome(elements, tokens);
         }
 
         private void AssertWarning(ErrorSink errorSink, Severety severety, string message)
@@ -49,7 +73,7 @@ namespace MathGraph.Tests
 
         private void AssertOutcome(PostfixNotationElement[] expectedResult, MathsToken[] input)
         {
-            PostfixNotationElement[] postfix = new MathsPostfixParser().ParseTokens(input).ToArray();
+            PostfixNotationElement[] postfix = new MathsPostfixParser().Parse(input).ToArray();
             this.AssertSameContent(expectedResult, postfix);
         }
 

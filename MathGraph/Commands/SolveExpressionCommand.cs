@@ -20,7 +20,7 @@ namespace MathGraph.Commands
             IEnumerable<MathsToken> tokens = lexer.LexMathematicalExpression(base.container.Expression);
 
             MathsPostfixParser parser = new MathsPostfixParser();
-            IEnumerable<PostfixNotationElement> postfix = parser.ParseTokens(tokens);
+            IEnumerable<PostfixNotationElement> postfix = parser.Parse(tokens);
 
             PostfixCalculator calculator = new PostfixCalculator();
             double result = calculator.Calculate(postfix);

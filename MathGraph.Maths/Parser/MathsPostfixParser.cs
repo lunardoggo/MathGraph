@@ -9,7 +9,7 @@ namespace MathGraph.Maths.Parser
 {
     public class MathsPostfixParser
     {
-        public IEnumerable<PostfixNotationElement> ParseTokens(IEnumerable<MathsToken> tokens)
+        public IEnumerable<PostfixNotationElement> Parse(IEnumerable<MathsToken> tokens)
         {
             IEnumerator<MathsToken> enumerator = tokens.GetEnumerator();
             Stack<MathsToken> operators = new Stack<MathsToken>();

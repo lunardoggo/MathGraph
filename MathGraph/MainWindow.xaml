@@ -20,8 +20,7 @@
                 <ctrl:ErrorSinkView Grid.Row="2" ItemsSource="{Binding Path=ErrorSink, Mode=OneWay}"/>
             </Grid>
         </TabItem>
-        <TabItem Header="Graph" IsSelected="True">
-            <ctrl:CartesianCoordinateSystem/>
+        <TabItem Header="Solver" IsSelected="True">
         </TabItem>
     </TabControl>
 </Window>
