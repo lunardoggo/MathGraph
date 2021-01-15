@@ -73,7 +73,7 @@ namespace MathGraph.Maths.Lexer
         private MathsTokenCategory GetCharTokenCategory(char @char)
         {
             const string parentheses = "()[]{}";
-            const string operators = "+-*/";
+            const string operators = "+-*/^";
 
             if (Char.IsDigit(@char) || @char == this.decimalSeparator)
             {
@@ -104,6 +104,7 @@ namespace MathGraph.Maths.Lexer
                 case '*': return MathsTokenType.Multiply;
                 case '/': return MathsTokenType.Divide;
                 case '-': return MathsTokenType.Minus;
+                case '^': return MathsTokenType.Power;
                 case '+': return MathsTokenType.Plus;
                 default: throw new NotImplementedException();
             }
