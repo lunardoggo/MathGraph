@@ -1,14 +1,12 @@
 ﻿using MathGraph.Maths.Parser.Expressions;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System;
 
 namespace MathGraph.Maths.Calculator
 {
     public class MathsExpressionTreeCalculator
     {
-        public double Evaluate(MathsExpression expression)
+        public decimal Evaluate(MathsExpression expression)
         {
             if(expression is ConstantExpression constant)
             {
@@ -16,8 +14,8 @@ namespace MathGraph.Maths.Calculator
             }
             else if(expression is OperatorExpression @operator)
             {
-                double firstChild = this.Evaluate(@operator.Children.ElementAt(0));
-                double secondChild = this.Evaluate(@operator.Children.ElementAt(1));
+                decimal firstChild = this.Evaluate(@operator.Children.ElementAt(0));
+                decimal secondChild = this.Evaluate(@operator.Children.ElementAt(1));
 
                 return this.Evaluate(@operator.Operator, firstChild, secondChild);
             }
@@ -27,7 +25,7 @@ namespace MathGraph.Maths.Calculator
             }
         }
 
-        private double Evaluate(OperationType operation, double firstChild, double secondChild)
+        private decimal Evaluate(OperationType operation, decimal firstChild, decimal secondChild)
         {
             switch(operation)
             {

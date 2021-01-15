@@ -57,7 +57,7 @@ namespace MathGraph.Tests
             secondChild = operatorExpression.Children.Skip(1).First();
         }
 
-        private void AssertConstantExpression(MathsExpression expression, double value)
+        private void AssertConstantExpression(MathsExpression expression, decimal value)
         {
             Assert.IsType<ConstantExpression>(expression);
             ConstantExpression constant = expression as ConstantExpression;

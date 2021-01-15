@@ -50,6 +50,7 @@ namespace MathGraph.Maths.Lexer
         Divide = 3,
         Minus = 4,
         Plus = 5,
+        Power = 6,
 
         ClosingParenthesis,
         OpenParenthesis,

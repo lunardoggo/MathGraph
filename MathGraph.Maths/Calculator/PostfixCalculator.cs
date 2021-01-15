@@ -17,7 +17,7 @@ namespace MathGraph.Maths.Calculator
             this.ErrorSink = new ErrorSink();
         }
 
-        public double Calculate(IEnumerable<PostfixNotationElement> elements)
+        public decimal Calculate(IEnumerable<PostfixNotationElement> elements)
         {
             IEnumerator<PostfixNotationElement> enumerator = elements.GetEnumerator();
             Stack<ValueElement> operands = new Stack<ValueElement>();
@@ -33,7 +33,7 @@ namespace MathGraph.Maths.Calculator
                     if (operands.Count < 2)
                     {
                         this.ErrorSink.AddError(Severety.Error, "An operator must have two values to operate on", -1);
-                        return 0.0d;
+                        return 0.0m;
                     }
 
                     //First operand popped of must be the right operand in order to calculate divisions and subtractions correctly
@@ -42,13 +42,13 @@ namespace MathGraph.Maths.Calculator
 
                     try
                     {
-                        double result = @operator.Operate(first, second);
+                        decimal result = @operator.Operate(first, second);
                         operands.Push(new ValueElement(result));
                     }
                     catch (Exception ex)
                     {
                         this.ErrorSink.AddError(Severety.Error, $"Could not operate on values \"{first.Value}\" and \"{second.Value}\" with operation type \"{@operator.Type}\": {ex.Message}", -1);
-                        return 0.0d;
+                        return 0.0m;
                     }
                 }
                 else
@@ -60,7 +60,7 @@ namespace MathGraph.Maths.Calculator
             if(operands.Count > 1)
             {
                 this.ErrorSink.AddError(Severety.Error, $"Could not operate on {operands.Count} operands because of missing operators", -1);
-                return 0.0d;
+                return 0.0m;
             }
 
             return operands.Single().Value;

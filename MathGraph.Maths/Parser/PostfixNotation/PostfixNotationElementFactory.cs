@@ -32,7 +32,7 @@ namespace MathGraph.Maths.Parser.PostfixNotation
 
         private PostfixNotationElement ProduceValueElement(MathsToken token)
         {
-            return new ValueElement(Double.Parse(token.Value, this.culture));
+            return new ValueElement(Decimal.Parse(token.Value, this.culture));
         }
 
         private PostfixNotationElement ProduceOperatorElement(MathsToken token)

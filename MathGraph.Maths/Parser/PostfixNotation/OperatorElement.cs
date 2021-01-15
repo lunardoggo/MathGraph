@@ -25,6 +25,7 @@ namespace MathGraph.Maths.Parser.PostfixNotation
                     case OperationType.Division: return "/";
                     case OperationType.Subtraction: return "-";
                     case OperationType.Multiplication: return "*";
+                    case OperationType.Power: return "^";
                     default: throw new NotImplementedException();
                 }
             }
@@ -35,7 +36,7 @@ namespace MathGraph.Maths.Parser.PostfixNotation
             return other is OperatorElement @operator && @operator.Type == this.Type;
         }
 
-        public double Operate(ValueElement firstOperand, ValueElement secondOperand)
+        public decimal Operate(ValueElement firstOperand, ValueElement secondOperand)
         {
             switch (this.Type)
             {
@@ -43,8 +44,32 @@ namespace MathGraph.Maths.Parser.PostfixNotation
                 case OperationType.Division: return firstOperand.Value / secondOperand.Value;
                 case OperationType.Subtraction: return firstOperand.Value - secondOperand.Value;
                 case OperationType.Multiplication: return firstOperand.Value * secondOperand.Value;
+                case OperationType.Power: return this.Pow(firstOperand.Value, secondOperand.Value);
                 default: throw new NotImplementedException($"Operation \"{this.Type}\" is not implemented.");
             }
+        }
+
+        private decimal Pow(decimal @base, decimal exponent)
+        {
+            decimal output = @base;
+            if(exponent == 0)
+            {
+                return 1.0m;
+            }
+            if(exponent % 1 != 0)
+            {
+                throw new InvalidOperationException("Exponents must be whole numbers!");
+            }
+            int power = (int)Math.Abs(exponent);
+
+            //Math-class doesn't provide Pow method for decimal, iterative solution as quick and dirty hack
+            //(maybe there is something better out there)
+            for(int i = 1; i < power; i++)
+            {
+                output *= @base;
+            }
+
+            return power == exponent ? output : 1.0m / output;
         }
     }
 }

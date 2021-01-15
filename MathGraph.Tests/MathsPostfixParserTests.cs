@@ -66,6 +66,56 @@ namespace MathGraph.Tests
             this.AssertOutcome(elements, tokens);
         }
 
+        [Fact]
+        public void TestParseWithPower()
+        {
+            MathsToken[] tokens = new MathsToken[]
+            {
+                new MathsToken("4", new TokenSpan(0, 1), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("+", new TokenSpan(1, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
+                new MathsToken("8", new TokenSpan(2, 1), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("^", new TokenSpan(3, 1), MathsTokenCategory.Symbol, MathsTokenType.Power),
+                new MathsToken("3", new TokenSpan(4, 1), MathsTokenCategory.Number, MathsTokenType.Number)
+            };
+
+            PostfixNotationElement[] elements = new PostfixNotationElement[]
+            {
+                new ValueElement(4),
+                new ValueElement(8),
+                new ValueElement(3),
+                new OperatorElement(MathsTokenType.Power),
+                new OperatorElement(MathsTokenType.Plus)
+            };
+
+            this.AssertOutcome(elements, tokens);
+        }
+
+        [Fact]
+        public void TestParseWithPowerInParenthesis()
+        {
+            MathsToken[] tokens = new MathsToken[]
+            {
+                new MathsToken("(", new TokenSpan(0, 1), MathsTokenCategory.Parenthesis, MathsTokenType.OpenParenthesis),
+                new MathsToken("4", new TokenSpan(1, 1), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken("+", new TokenSpan(2, 1), MathsTokenCategory.Symbol, MathsTokenType.Plus),
+                new MathsToken("8", new TokenSpan(3, 1), MathsTokenCategory.Number, MathsTokenType.Number),
+                new MathsToken(")", new TokenSpan(4, 1), MathsTokenCategory.Parenthesis, MathsTokenType.ClosingParenthesis),
+                new MathsToken("^", new TokenSpan(5, 1), MathsTokenCategory.Symbol, MathsTokenType.Power),
+                new MathsToken("3", new TokenSpan(6, 1), MathsTokenCategory.Number, MathsTokenType.Number)
+            };
+
+            PostfixNotationElement[] elements = new PostfixNotationElement[]
+            {
+                new ValueElement(4),
+                new ValueElement(8),
+                new OperatorElement(MathsTokenType.Plus),
+                new ValueElement(3),
+                new OperatorElement(MathsTokenType.Power)
+            };
+
+            this.AssertOutcome(elements, tokens);
+        }
+
         private void AssertWarning(ErrorSink errorSink, Severety severety, string message)
         {
             Assert.Contains(errorSink.Entries, _entry => _entry.Severety == severety && _entry.Message.Equals(message));
@@ -106,12 +156,12 @@ namespace MathGraph.Tests
             //result: 4 2.5 4 * + 5 -
             return new PostfixNotationElement[]
             {
-                new ValueElement(4.0d),
-                new ValueElement(2.5d),
-                new ValueElement(4.0d),
+                new ValueElement(4.0m),
+                new ValueElement(2.5m),
+                new ValueElement(4.0m),
                 new OperatorElement(MathsTokenType.Multiply),
                 new OperatorElement(MathsTokenType.Plus),
-                new ValueElement(5.0d),
+                new ValueElement(5.0m),
                 new OperatorElement(MathsTokenType.Minus)
             };
         }
@@ -144,12 +194,12 @@ namespace MathGraph.Tests
             //result: 4 -2 -x + * -1 +
             return new PostfixNotationElement[]
             {
-                new ValueElement(4.0d),
-                new ValueElement(-2.0d),
+                new ValueElement(4.0m),
+                new ValueElement(-2.0m),
                 new VariableElement(true, "x"),
                 new OperatorElement(MathsTokenType.Plus),
                 new OperatorElement(MathsTokenType.Multiply),
-                new ValueElement(-1.0d),
+                new ValueElement(-1.0m),
                 new OperatorElement(MathsTokenType.Plus)
             };
         }
@@ -174,8 +224,8 @@ namespace MathGraph.Tests
             //Eventhough the minus is before the closing parenthesis, add it to the output
             return new PostfixNotationElement[]
             {
-                new ValueElement(2.0d),
-                new ValueElement(1.0d),
+                new ValueElement(2.0m),
+                new ValueElement(1.0m),
                 new OperatorElement(MathsTokenType.Plus),
                 new OperatorElement(MathsTokenType.Minus)
             };
@@ -202,12 +252,12 @@ namespace MathGraph.Tests
             //result: -7 14 / 3 + 0.5 -
             return new PostfixNotationElement[]
             {
-                new ValueElement(-7.0d),
-                new ValueElement(14.0d),
+                new ValueElement(-7.0m),
+                new ValueElement(14.0m),
                 new OperatorElement(MathsTokenType.Divide),
-                new ValueElement(3.0d),
+                new ValueElement(3.0m),
                 new OperatorElement(MathsTokenType.Plus),
-                new ValueElement(0.5d),
+                new ValueElement(0.5m),
                 new OperatorElement(MathsTokenType.Minus)
             };
         }

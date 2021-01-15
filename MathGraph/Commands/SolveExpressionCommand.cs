@@ -23,7 +23,7 @@ namespace MathGraph.Commands
             IEnumerable<PostfixNotationElement> postfix = parser.Parse(tokens);
 
             PostfixCalculator calculator = new PostfixCalculator();
-            double result = calculator.Calculate(postfix);
+            decimal result = calculator.Calculate(postfix);
 
             this.container.ErrorSinkEntries = lexer.ErrorSink.Entries.Concat(parser.ErrorSink.Entries).Concat(calculator.ErrorSink.Entries);
             base.container.PostfixNotation = String.Join(" ", postfix.Select(_element => _element.StringValue));

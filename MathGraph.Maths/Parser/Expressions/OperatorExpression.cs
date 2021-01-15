@@ -32,5 +32,6 @@ namespace MathGraph.Maths.Parser.Expressions
         Subtraction = 4,
         Division = 3,
         Addition = 5,
+        Power = 6
     }
 }

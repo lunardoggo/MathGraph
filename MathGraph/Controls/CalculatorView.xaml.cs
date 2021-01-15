@@ -46,14 +46,14 @@ namespace MathGraph.Controls
             set { SetValue(ExpressionProperty, value); }
         }
 
-        public double Result
+        public decimal Result
         {
-            get { return (double)GetValue(ResultProperty); }
+            get { return (decimal)GetValue(ResultProperty); }
             set { SetValue(ResultProperty, value); }
         }
 
         public static readonly DependencyProperty ResultProperty =
-            DependencyProperty.Register("Result", typeof(double), typeof(CalculatorView), new PropertyMetadata(0.0d));
+            DependencyProperty.Register("Result", typeof(decimal), typeof(CalculatorView), new PropertyMetadata(0.0m));
 
         public static readonly DependencyProperty ExpressionProperty =
             DependencyProperty.Register("Expression", typeof(string), typeof(CalculatorView), new PropertyMetadata(""));

@@ -32,9 +32,10 @@ namespace MathGraph.Maths.Parser
                 }
                 else if (current.Category == MathsTokenCategory.Symbol)
                 {
-                    //TODO: Support for power-operator (is right-assiciative -> look up behaviour)
+                    MathsToken topOperator = operators.FirstOrDefault();
                     while (operators.Count > 0
-                           && this.ComparedOperatorHasGreaterOrSamePrecedence(current, operators.Peek())
+                           && (   this.ComparedOperatorHasGreaterPrecedence(current, topOperator)
+                               || (this.ComparedOperatorHasGreaterOrSamePrecedence(current, topOperator) && this.IsOperatorLeftAssociative(topOperator)))
                            && operators.Peek().Type != MathsTokenType.OpenParenthesis)
                     {
                         output.Enqueue(operators.Pop());
@@ -85,6 +86,11 @@ namespace MathGraph.Maths.Parser
             return this.GetOperatorPrecedence(current) <= this.GetOperatorPrecedence(comparedToken);
         }
 
+        private bool ComparedOperatorHasGreaterPrecedence(MathsToken current, MathsToken comparedToken)
+        {
+            return this.GetOperatorPrecedence(current) < this.GetOperatorPrecedence(comparedToken);
+        }
+
         private int GetOperatorPrecedence(MathsToken token)
         {
             if (token.Category == MathsTokenCategory.Symbol)
@@ -93,15 +99,29 @@ namespace MathGraph.Maths.Parser
                 {
                     case MathsTokenType.Minus:
                     case MathsTokenType.Plus:
-                        return 0;
+                        return 1;
                     case MathsTokenType.Multiply:
                     case MathsTokenType.Divide:
-                        return 1;
+                        return 2;
+                    case MathsTokenType.Power:
+                        return 3;
                     default:
                         throw new NotImplementedException($"Precendence of operator \"{token.Value}\" (type: {token.Type}) is not implemented.");
                 }
             }
             return -1;
+        }
+
+        private  bool IsOperatorLeftAssociative(MathsToken token)
+        {
+            if(token.Category == MathsTokenCategory.Symbol)
+            {
+                return token.Type == MathsTokenType.Plus
+                    || token.Type == MathsTokenType.Minus
+                    || token.Type == MathsTokenType.Multiply
+                    || token.Type == MathsTokenType.Divide;
+            }
+            return false;
         }
 
         private MathsToken GetMathsTokenWithSign(MathsToken token, bool lastWasUnary, int negateOngoingLevel)

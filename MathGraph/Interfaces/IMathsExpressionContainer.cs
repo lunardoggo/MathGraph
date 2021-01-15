@@ -8,6 +8,6 @@ namespace MathGraph.Interfaces
         IEnumerable<ErrorSinkEntry> ErrorSinkEntries { get; set; }
         string PostfixNotation { get; set; }
         string Expression { get; set; }
-        double Result { get; set; }
+        decimal Result { get; set; }
     }
 }

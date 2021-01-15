@@ -27,7 +27,7 @@ namespace MathGraph.Maths.Lexer
                 currentIndex += token.TokenSpan.Length;
                 previousToken = token;
             }
-            return tokens.ToArray();
+            return MathsTokenCompletionHelper.Instance.Complement(tokens).ToArray();
         }
 
         private MathsToken GetNextToken(string expression, int currentIndex, MathsToken previousToken)

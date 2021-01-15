@@ -1,17 +1,16 @@
 ﻿using System.Diagnostics;
-using System;
 
 namespace MathGraph.Maths.Parser.PostfixNotation
 {
     [DebuggerDisplay("ValueElement \\{ Value = {Value} \\}")]
     public class ValueElement : PostfixNotationElement
     {
-        internal ValueElement(double value)
+        internal ValueElement(decimal value)
         {
             this.Value = value;
         }
 
-        public double Value { get; }
+        public decimal Value { get; }
 
         public override string StringValue { get { return this.Value.ToString(); } }
 
