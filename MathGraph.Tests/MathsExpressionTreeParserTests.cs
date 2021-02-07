@@ -22,7 +22,9 @@ namespace MathGraph.Tests
 
             this.AssertOperatorExpression(expression, OperationType.Addition, out var firstChild, out var secondChild);
             Assert.IsType<ConstantExpression>(firstChild);
+            Assert.Equal(10, (firstChild as ConstantExpression).Value);
             Assert.IsType<ConstantExpression>(secondChild);
+            Assert.Equal(5, (secondChild as ConstantExpression).Value);
         }
 
         [Fact]
@@ -39,8 +41,8 @@ namespace MathGraph.Tests
 
             MathsExpression expression = new MathsExpressionTreeParser().Parse(tokens);
 
-            this.AssertOperatorExpression(expression, OperationType.Addition, out var division, out var fiveConstant);
-            this.AssertOperatorExpression(division, OperationType.Division, out var twoConstant, out var tenConstant);
+            this.AssertOperatorExpression(expression, OperationType.Addition, out var fiveConstant, out var division);
+            this.AssertOperatorExpression(division, OperationType.Division, out var tenConstant, out var twoConstant);
             this.AssertConstantExpression(twoConstant, 2);
             this.AssertConstantExpression(fiveConstant, 5);
             this.AssertConstantExpression(tenConstant, 10);
@@ -50,7 +52,7 @@ namespace MathGraph.Tests
         {
             Assert.IsType<OperatorExpression>(expression);
             OperatorExpression operatorExpression = expression as OperatorExpression;
-            Assert.Equal(ExpressionType.OperatorExpression, operatorExpression.Type);
+            Assert.Equal(ExpressionType.Operator, operatorExpression.Type);
             Assert.Equal(type, operatorExpression.Operator);
             Assert.Equal(2, operatorExpression.Children.Count());
             firstChild = operatorExpression.Children.First();
@@ -61,8 +63,7 @@ namespace MathGraph.Tests
         {
             Assert.IsType<ConstantExpression>(expression);
             ConstantExpression constant = expression as ConstantExpression;
-            Assert.Equal(ExpressionType.ConstantExpression, constant.Type);
-            Assert.Empty(constant.Children);
+            Assert.Equal(ExpressionType.Constant, constant.Type);
             Assert.Equal(value, constant.Value);
         }
     }

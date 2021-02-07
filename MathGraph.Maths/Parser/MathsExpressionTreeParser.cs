@@ -1,10 +1,8 @@
-﻿using MathGraph.Maths.Lexer;
+﻿using MathGraph.Maths.Parser.PostfixNotation;
 using MathGraph.Maths.Parser.Expressions;
-using MathGraph.Maths.Parser.PostfixNotation;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using MathGraph.Maths.Lexer;
+using System;
 
 namespace MathGraph.Maths.Parser
 {
@@ -26,11 +24,11 @@ namespace MathGraph.Maths.Parser
         {
             PostfixNotationElement nodeElement = postfix.Dequeue();
             MathsExpression node = this.GetExpressionFromPostfixElement(nodeElement);
-            if (node.Type == ExpressionType.OperatorExpression)
+            if (node is ChildrenMathsExpression expression && node.Type == ExpressionType.Operator)
             {
-                for (int i = 0; i < node.MaxChildrenCount; i++)
+                for (int i = 0; i < expression.MinChildrenCount; i++)
                 {
-                    node.AddChild(expressionStack.Pop());
+                    expression.AddFirstChild(expressionStack.Pop());
                 }
             }
             expressionStack.Push(node);

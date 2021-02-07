@@ -2,15 +2,14 @@
 {
     public class ConstantExpression : MathsExpression
     {
-        public ConstantExpression(decimal value) : base(ExpressionType.ConstantExpression)
+        public ConstantExpression(decimal value) : base(ExpressionType.Constant)
         {
             this.Value = value;
         }
 
-        public override int MaxChildrenCount { get; } = 0;
         public decimal Value { get; }
 
-        protected override bool Equals(MathsExpression expression)
+        public override bool Equals(MathsExpression expression)
         {
             if(expression is ConstantExpression constantExpression)
             {

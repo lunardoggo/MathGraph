@@ -37,7 +37,8 @@ namespace MathGraph.Maths.Lexer
         Symbol,
         Variable,
         Number,
-        Unary
+        Unary,
+        Comparison
     }
 
     public enum MathsTokenType
@@ -51,12 +52,19 @@ namespace MathGraph.Maths.Lexer
         Minus = 4,
         Plus = 5,
         Power = 6,
+        Factorial = 7,
 
         ClosingParenthesis,
         OpenParenthesis,
 
         Variable,
 
-        UnaryMinus
+        UnaryMinus,
+
+        Equals = 20,
+        GreaterThan = 21,
+        LessThan = 22,
+        GreaterOrEqual = 23,
+        LessOrEqual = 24
     }
 }

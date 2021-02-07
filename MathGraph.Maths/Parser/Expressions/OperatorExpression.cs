@@ -2,22 +2,23 @@
 
 namespace MathGraph.Maths.Parser.Expressions
 {
-    public class OperatorExpression : MathsExpression
+    public class OperatorExpression : ChildrenMathsExpression
     {
-        public OperatorExpression(OperationType @operator) 
-            : base(ExpressionType.OperatorExpression)
+        public OperatorExpression(OperationType @operator)
+            : base(ExpressionType.Operator)
         {
             this.Operator = @operator;
+            this.MinChildrenCount = this.Operator == OperationType.Factorial ? 1 : 2;
         }
 
-        public override int MaxChildrenCount { get; } = 2;
+        public override int MinChildrenCount { get; }
         public OperationType Operator { get; }
 
-        protected override bool Equals(MathsExpression expression)
+        public override bool Equals(MathsExpression expression)
         {
-            if(expression is OperatorExpression operatorExpression)
+            if (expression is OperatorExpression operatorExpression)
             {
-                return    this.Operator == operatorExpression.Operator
+                return this.Operator == operatorExpression.Operator
                        && this.children.Count == operatorExpression.children.Count
                        && this.children.Except(operatorExpression.Children).Count() == 0;
             }
@@ -29,9 +30,10 @@ namespace MathGraph.Maths.Parser.Expressions
     {
         //Indices match those of MathsTokenType
         Multiplication = 2,
-        Subtraction = 4,
         Division = 3,
+        Subtraction = 4,
         Addition = 5,
-        Power = 6
+        Power = 6,
+        Factorial = 7
     }
 }

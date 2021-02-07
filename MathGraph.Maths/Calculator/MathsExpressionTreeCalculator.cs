@@ -30,13 +30,13 @@ namespace MathGraph.Maths.Calculator
             switch(operation)
             {
                 case OperationType.Addition:
-                    return secondChild + firstChild;
+                    return firstChild + secondChild;
                 case OperationType.Subtraction:
-                    return secondChild - firstChild;
+                    return firstChild - secondChild;
                 case OperationType.Multiplication:
-                    return secondChild * firstChild;
+                    return firstChild * secondChild;
                 case OperationType.Division:
-                    return secondChild / firstChild;
+                    return firstChild / secondChild;
                 default:
                     throw new NotImplementedException($"Operation {operation} isn't implemented for evaluation");
             }

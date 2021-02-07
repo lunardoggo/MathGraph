@@ -1,34 +1,15 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 
 namespace MathGraph.Maths.Parser.Expressions
 {
-    public abstract class MathsExpression
+    public abstract class MathsExpression : IEquatable<MathsExpression>
     {
-        protected List<MathsExpression> children = new List<MathsExpression>();
-
         public MathsExpression(ExpressionType type)
         {
             this.Type = type;
         }
 
-        protected abstract bool Equals(MathsExpression expression);
-
-        internal void AddChild(MathsExpression child)
-        {
-            if(this.children.Count >= this.MaxChildrenCount)
-            {
-                throw new InvalidOperationException($"Can't add more than {this.MaxChildrenCount} to node of type {this.Type}");
-            }
-            this.children.Add(child);
-        }
-
-        public IEnumerable<MathsExpression> Children
-        {
-            get { return children; }
-        }
-
-        public abstract int MaxChildrenCount { get; }
+        public abstract bool Equals(MathsExpression expression);
 
         public override bool Equals(object obj)
         {
@@ -49,8 +30,9 @@ namespace MathGraph.Maths.Parser.Expressions
 
     public enum ExpressionType
     {
-        OperatorExpression,
-        ConstantExpression,
-        VariableExpression
+        Operator,
+        Constant,
+        Variable,
+        Fraction
     }
 }
